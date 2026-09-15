@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+    <title>Challengers | Registration Hub</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --red: #d20a2e;
+        --red-bright: #f0183f;
+        --black: #070707;
+        --black-2: #0d0d0d;
+        --black-3: #151515;
+        --white: #ffffff;
+        --muted: #969696;
+        --line: rgba(255,255,255,.11);
+        --ease: cubic-bezier(.22,1,.36,1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        background: var(--black);
+    }
+
+    body {
+        background: var(--black);
+        color: var(--white);
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    button {
+        font: inherit;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+    }
+
+    /* =========================================
+       LOADING SCREEN
+    ========================================= */
+
+    .loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: var(--black);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity .7s var(--ease), visibility .7s;
+    }
+
+    .loader.hide {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .loader-inner {
+        text-align: center;
+    }
+
+    .loader-logo {
+        width: 76px;
+        height: 76px;
+        object-fit: contain;
+        margin: 0 auto 18px;
+        animation: loaderPulse 1.2s ease-in-out infinite;
+    }
+
+    .loader-line {
+        width: 90px;
+        height: 2px;
+        background: rgba(255,255,255,.12);
+        overflow: hidden;
+        margin: auto;
+    }
+
+    .loader-line span {
+        display: block;
+        width: 45%;
+        height: 100%;
+        background: var(--red);
+        animation: loading 1s ease-in-out infinite;
+    }
+
+    @keyframes loading {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(320%); }
+    }
+
+    @keyframes loaderPulse {
+        0%,100% { transform: scale(.96); opacity: .7; }
+        50% { transform: scale(1); opacity: 1; }
+    }
+
+    /* =========================================
+       NAVIGATION
+    ========================================= */
+
+    .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 82px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 5vw;
+        border-bottom: 1px solid transparent;
+        transition:
+            background .4s ease,
+            border-color .4s ease,
+            backdrop-filter .4s ease;
+    }
+
+    .nav.scrolled {
+        background: rgba(7,7,7,.84);
+        backdrop-filter: blur(18px);
+        border-color: var(--line);
+    }
+
+    .nav-inner {
+        width: 100%;
+        max-width: 1400px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .brand img {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: .9;
+    }
+
+    .brand-name {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: .07em;
+    }
+
+    .brand-label {
+        color: #777;
+        font-size: 8px;
+        letter-spacing: .2em;
+        margin-top: 5px;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+    }
+
+    .nav-links a {
+        color: #bdbdbd;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        transition: color .25s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--white);
+    }
+
+    .nav-cta {
+        padding: 12px 20px;
+        background: var(--red);
+        color: var(--white) !important;
+        transition: transform .3s var(--ease), background .3s ease;
+    }
+
+    .nav-cta:hover {
+        background: var(--red-bright);
+        transform: translateY(-2px);
+    }
+
+    .mobile-toggle {
+        display: none;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: white;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-toggle span,
+    .mobile-toggle span::before,
+    .mobile-toggle span::after {
+        content: "";
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: white;
+        position: relative;
+        transition: .3s ease;
+    }
+
+    .mobile-toggle span::before {
+        position: absolute;
+        top: -6px;
+    }
+
+    .mobile-toggle span::after {
+        position: absolute;
+        top: 6px;
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+
+    .hero {
+        min-height: 100svh;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .hero-image {
+        position: absolute;
+        inset: 0;
+        z-index: -3;
+    }
+
+    .hero-image img {
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        filter: saturate(.8);
+        transform: scale(1.04);
+        animation: heroZoom 10s var(--ease) forwards;
+    }
+
+    @keyframes heroZoom {
+        from { transform: scale(1.08); }
+        to { transform: scale(1); }
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background:
+            linear-gradient(90deg,
+                rgba(0,0,0,.94) 0%,
+                rgba(0,0,0,.73) 35%,
+                rgba(0,0,0,.2) 72%,
+                rgba(0,0,0,.45) 100%);
+    }
+
+    .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background:
+            linear-gradient(0deg,
+                var(--black) 0%,
+                rgba(7,7,7,.65) 12%,
+                transparent 42%);
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 1400px;
+        margin: auto;
+        padding: 150px 5vw 72px;
+    }
+
+    .hero-kicker {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #d0d0d0;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .25em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        opacity: 0;
+        animation: heroUp .8s .25s var(--ease) forwards;
+    }
+
+    .hero-kicker::before {
+        content: "";
+        width: 30px;
+        height: 2px;
+        background: var(--red);
+    }
+
+    .hero-title {
+        max-width: 780px;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(76px, 11vw, 170px);
+        line-height: .78;
+        font-weight: 900;
+        letter-spacing: -.035em;
+        text-transform: uppercase;
+        opacity: 0;
+        animation: heroUp 1s .35s var(--ease) forwards;
+    }
+
+    .hero-title span {
+        color: var(--red);
+        display: block;
+    }
+
+    .hero-bottom {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 40px;
+        margin-top: 40px;
+        opacity: 0;
+        animation: heroUp .9s .55s var(--ease) forwards;
+    }
+
+    .hero-description {
+        max-width: 430px;
+        color: #c5c5c5;
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .hero-action {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .primary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 54px;
+        padding: 0 27px;
+        background: var(--red);
+        color: white;
+        border: 0;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+            background .3s ease,
+            transform .35s var(--ease);
+    }
+
+    .primary-btn:hover {
+        background: var(--red-bright);
+        transform: translateY(-3px);
+    }
+
+    .primary-btn .arrow {
+        font-size: 17px;
+        transition: transform .3s var(--ease);
+    }
+
+    .primary-btn:hover .arrow {
+        transform: translateX(5px);
+    }
+
+    .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 54px;
+        padding: 0 25px;
+        border: 1px solid rgba(255,255,255,.25);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        transition: background .3s ease, border-color .3s ease;
+    }
+
+    .secondary-btn:hover {
+        background: rgba(255,255,255,.08);
+        border-color: rgba(255,255,255,.5);
+    }
+
+    .scroll-mark {
+        position: absolute;
+        right: 5vw;
+        bottom: 52px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transform: rotate(90deg) translateX(100%);
+        transform-origin: right;
+        color: #858585;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .25em;
+        text-transform: uppercase;
+    }
+
+    .scroll-mark::after {
+        content: "";
+        width: 45px;
+        height: 1px;
+        background: #555;
+    }
+
+    @keyframes heroUp {
+        from {
+            opacity: 0;
+            transform: translateY(35px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* =========================================
+       INTERNAL HEADER
+    ========================================= */
+
+    .section {
+        padding: 120px 5vw;
+    }
+
+    .section-inner {
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    .eyebrow {
+        color: var(--red);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .section-heading {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(48px, 6vw, 82px);
+        line-height: .9;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -.02em;
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(35px);
+        transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+
+    .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* =========================================
+       QUICK ACCESS
+    ========================================= */
+
+    .access {
+        background: var(--black);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .access-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        border-left: 1px solid var(--line);
+    }
+
+    .access-card {
+        min-height: 220px;
+        padding: 35px;
+        border-right: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: background .4s ease;
+    }
+
+    .access-card:hover {
+        background: var(--black-2);
+    }
+
+    .access-card.large {
+        background: var(--red);
+    }
+
+    .access-card.large:hover {
+        background: #b80827;
+    }
+
+    .access-number {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 12px;
+        color: rgba(255,255,255,.5);
+        letter-spacing: .15em;
+    }
+
+    .access-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 40px;
+        line-height: .9;
+        font-weight: 800;
+        text-transform: uppercase;
+        max-width: 280px;
+    }
+
+    .access-copy {
+        color: #9c9c9c;
+        font-size: 12px;
+        line-height: 1.6;
+        max-width: 280px;
+        margin-top: 10px;
+    }
+
+    .large .access-copy {
+        color: rgba(255,255,255,.7);
+    }
+
+    .access-arrow {
+        position: absolute;
+        right: 30px;
+        bottom: 28px;
+        font-size: 25px;
+        transition: transform .35s var(--ease);
+    }
+
+    .access-card:hover .access-arrow {
+        transform: translate(5px,-5px);
+    }
+
+    /* =========================================
+       IDENTITY / IMAGE GRID
+    ========================================= */
+
+    .identity {
+        background: #0a0a0a;
+    }
+
+    .identity-layout {
+        display: grid;
+        grid-template-columns: .9fr 1.1fr;
+        gap: 90px;
+        align-items: center;
+    }
+
+    .identity-copy {
+        max-width: 500px;
+    }
+
+    .identity-copy p {
+        color: #999;
+        font-size: 15px;
+        line-height: 1.85;
+        margin-top: 28px;
+    }
+
+    .identity-rule {
+        width: 60px;
+        height: 2px;
+        background: var(--red);
+        margin-top: 32px;
+    }
+
+    .image-stack {
+        position: relative;
+        min-height: 620px;
+    }
+
+    .image-main {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 77%;
+        height: 520px;
+        overflow: hidden;
+    }
+
+    .image-main img {
+        height: 100%;
+        object-fit: cover;
+        transition: transform .8s var(--ease);
+    }
+
+    .image-main:hover img {
+        transform: scale(1.045);
+    }
+
+    .image-secondary {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 48%;
+        height: 260px;
+        overflow: hidden;
+        border: 8px solid #0a0a0a;
+    }
+
+    .image-secondary img {
+        height: 100%;
+        object-fit: cover;
+        transition: transform .8s var(--ease);
+    }
+
+    .image-secondary:hover img {
+        transform: scale(1.06);
+    }
+
+    .image-tag {
+        position: absolute;
+        right: -1px;
+        bottom: 72px;
+        background: var(--red);
+        padding: 18px 24px;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    /* =========================================
+       TRAINING MOMENTS
+    ========================================= */
+
+    .training {
+        background: var(--white);
+        color: var(--black);
+    }
+
+    .training-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        margin-bottom: 55px;
+    }
+
+    .training-header .eyebrow {
+        color: var(--red);
+    }
+
+    .training-note {
+        max-width: 340px;
+        color: #666;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: 1.1fr .9fr .9fr;
+        gap: 12px;
+    }
+
+    .gallery-item {
+        height: 430px;
+        overflow: hidden;
+        position: relative;
+        background: #ddd;
+    }
+
+    .gallery-item.tall {
+        height: 520px;
+    }
+
+    .gallery-item img {
+        height: 100%;
+        object-fit: cover;
+        transition: transform .8s var(--ease);
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .gallery-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(0deg, rgba(0,0,0,.55), transparent 45%);
+        pointer-events: none;
+    }
+
+    .gallery-label {
+        position: absolute;
+        left: 22px;
+        bottom: 20px;
+        z-index: 2;
+        color: white;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+
+    /* =========================================
+       PROGRAMS
+    ========================================= */
+
+    .programs {
+        background: var(--black);
+    }
+
+    .program-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 30px;
+        margin-bottom: 45px;
+    }
+
+    .program-description {
+        max-width: 390px;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .program-list {
+        border-top: 1px solid var(--line);
+    }
+
+    .program {
+        min-height: 115px;
+        display: grid;
+        grid-template-columns: 80px 1fr auto;
+        align-items: center;
+        gap: 30px;
+        border-bottom: 1px solid var(--line);
+        transition: padding .45s var(--ease), background .4s ease;
+        padding: 0 20px;
+    }
+
+    .program:hover {
+        padding-left: 35px;
+        background: #0d0d0d;
+    }
+
+    .program-no {
+        color: #555;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 20px;
+    }
+
+    .program-name {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .program-age {
+        color: #777;
+        font-size: 10px;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+    }
+
+    .program-arrow {
+        color: var(--red);
+        font-size: 23px;
+    }
+
+    /* =========================================
+       CTA
+    ========================================= */
+
+    .cta {
+        padding: 130px 5vw;
+        background: var(--red);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta::before {
+        content: "CHALLENGERS";
+        position: absolute;
+        right: -50px;
+        bottom: -55px;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(120px, 19vw, 290px);
+        font-weight: 900;
+        line-height: .7;
+        color: rgba(0,0,0,.08);
+        pointer-events: none;
+    }
+
+    .cta-inner {
+        max-width: 1400px;
+        margin: auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .cta-small {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .cta-title {
+        max-width: 760px;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(60px, 9vw, 125px);
+        line-height: .82;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -.03em;
+    }
+
+    .cta-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+        margin-top: 48px;
+    }
+
+    .cta-copy {
+        max-width: 430px;
+        color: rgba(255,255,255,.78);
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .cta .primary-btn {
+        background: var(--black);
+        flex-shrink: 0;
+    }
+
+    .cta .primary-btn:hover {
+        background: #1b1b1b;
+    }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    footer {
+        background: var(--black);
+        padding: 60px 5vw 35px;
+        border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 50px;
+        padding-bottom: 55px;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .footer-brand img {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+    }
+
+    .footer-brand strong {
+        display: block;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 26px;
+        letter-spacing: .06em;
+    }
+
+    .footer-brand span {
+        display: block;
+        color: #666;
+        font-size: 8px;
+        letter-spacing: .18em;
+        margin-top: 3px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 35px;
+    }
+
+    .footer-links a {
+        color: #777;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        transition: color .25s ease;
+    }
+
+    .footer-links a:hover {
+        color: white;
+    }
+
+    .footer-bottom {
+        border-top: 1px solid var(--line);
+        padding-top: 25px;
+        display: flex;
+        justify-content: space-between;
+        color: #555;
+        font-size: 9px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media (max-width: 900px) {
+        .nav {
+            height: 70px;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(7,7,7,.97);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--line);
+            padding: 25px 5vw;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 22px;
+            transform: translateY(-15px);
+            opacity: 0;
+            visibility: hidden;
+            transition: .35s var(--ease);
+        }
+
+        .nav-links.open {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-toggle {
+            display: flex;
+        }
+
+        .hero-content {
+            padding-top: 130px;
+            padding-bottom: 60px;
+        }
+
+        .hero::before {
+            background:
+                linear-gradient(90deg,
+                rgba(0,0,0,.9),
+                rgba(0,0,0,.45));
+        }
+
+        .hero-title {
+            font-size: clamp(72px, 16vw, 120px);
+        }
+
+        .hero-bottom {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .scroll-mark {
+            display: none;
+        }
+
+        .access-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .access-card {
+            min-height: 190px;
+        }
+
+        .identity-layout {
+            grid-template-columns: 1fr;
+            gap: 60px;
+        }
+
+        .image-stack {
+            min-height: 550px;
+        }
+
+        .gallery {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .gallery-item.tall {
+            height: 430px;
+        }
+
+        .gallery-item:last-child {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .section {
+            padding: 85px 5vw;
+        }
+
+        .brand-text {
+            display: none;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+        }
+
+        .hero {
+            min-height: 92svh;
+        }
+
+        .hero-content {
+            padding: 120px 5vw 45px;
+        }
+
+        .hero-title {
+            font-size: clamp(65px, 19vw, 100px);
+        }
+
+        .hero-description {
+            font-size: 12px;
+        }
+
+        .hero-action {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            width: 100%;
+        }
+
+        .access-card {
+            min-height: 175px;
+            padding: 27px;
+        }
+
+        .access-title {
+            font-size: 34px;
+        }
+
+        .identity-copy p {
+            font-size: 13px;
+        }
+
+        .image-stack {
+            min-height: 410px;
+        }
+
+        .image-main {
+            width: 88%;
+            height: 350px;
+        }
+
+        .image-secondary {
+            width: 54%;
+            height: 190px;
+        }
+
+        .image-tag {
+            right: 0;
+            bottom: 43px;
+            padding: 13px 17px;
+            font-size: 13px;
+        }
+
+        .training-header,
+        .program-header {
+            display: block;
+        }
+
+        .training-note,
+        .program-description {
+            margin-top: 20px;
+        }
+
+        .gallery {
+            grid-template-columns: 1fr;
+        }
+
+        .gallery-item,
+        .gallery-item.tall {
+            height: 400px;
+        }
+
+        .gallery-item:last-child {
+            display: block;
+        }
+
+        .program {
+            min-height: 95px;
+            grid-template-columns: 35px 1fr 20px;
+            gap: 10px;
+            padding: 0 5px;
+        }
+
+        .program:hover {
+            padding-left: 10px;
+        }
+
+        .program-name {
+            font-size: 31px;
+        }
+
+        .program-age {
+            display: none;
+        }
+
+        .cta {
+            padding: 90px 5vw;
+        }
+
+        .cta-bottom {
+            display: block;
+        }
+
+        .cta .primary-btn {
+            margin-top: 28px;
+            width: 100%;
+        }
+
+        .footer-top {
+            display: block;
+        }
+
+        .footer-links {
+            margin-top: 35px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom {
+            display: block;
+            line-height: 1.8;
+        }
+
+        .footer-bottom span + span {
+            display: block;
+            margin-top: 8px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================================
+     LOADER
+========================================= -->
+
+<div class="loader" id="loader">
+    <div class="loader-inner">
+        <img src="logo.png" class="loader-logo" alt="Challengers">
+        <div class="loader-line">
+            <span></span>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+
+<header class="nav" id="nav">
+    <div class="nav-inner">
+
+        <a href="index.html" class="brand">
+            <img src="logo.png" alt="Challengers Basketball Academy">
+            <div class="brand-text">
+                <div class="brand-name">CHALLENGERS</div>
+                <div class="brand-label">Basketball Academy</div>
+            </div>
+        </a>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#access">Registration</a>
+            <a href="#programs">Programs</a>
+            <a href="#training">Training</a>
+            <a href="#about">About</a>
+            <a href="register.html" class="nav-cta">Register Player</a>
+        </nav>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">
+            <span></span>
+        </button>
+
+    </div>
+</header>
+
+
+<!-- =========================================
+     HERO
+========================================= -->
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-image">
+            <img src="p1.jpg" alt="Challengers basketball players">
+        </div>
+
+        <div class="hero-content">
+
+            <div class="hero-kicker">
+                Challengers Basketball Academy
+            </div>
+
+            <h1 class="hero-title">
+                Build Your
+                <span>Game.</span>
+            </h1>
+
+            <div class="hero-bottom">
+
+                <p class="hero-description">
+                    The internal registration hub for Challengers.
+                    Register new players, select the right development
+                    program, and submit an application for review.
+                </p>
+
+                <div class="hero-action">
+                    <a href="register.html" class="primary-btn">
+                        Register a Player
+                        <span class="arrow">→</span>
+                    </a>
+
+                    <a href="#access" class="secondary-btn">
+                        Explore
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="scroll-mark">
+            Scroll
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         QUICK ACCESS
+    ========================================= -->
+
+    <section class="section access" id="access">
+        <div class="section-inner">
+
+            <div class="access-grid reveal">
+
+                <a href="register.html" class="access-card large">
+                    <div class="access-number">01 / Registration</div>
+
+                    <div>
+                        <div class="access-title">Register A New Player</div>
+                        <div class="access-copy">
+                            Complete the player, guardian and program
+                            information in one guided application.
+                        </div>
+                    </div>
+
+                    <div class="access-arrow">↗</div>
+                </a>
+
+                <a href="application.html" class="access-card">
+                    <div class="access-number">02 / Application</div>
+
+                    <div>
+                        <div class="access-title">View Application</div>
+                        <div class="access-copy">
+                            Review an application submitted through the
+                            registration process.
+                        </div>
+                    </div>
+
+                    <div class="access-arrow">↗</div>
+                </a>
+
+                <a href="#programs" class="access-card">
+                    <div class="access-number">03 / Programs</div>
+
+                    <div>
+                        <div class="access-title">Find The Right Program</div>
+                        <div class="access-copy">
+                            Explore the development pathway and choose
+                            the appropriate basketball program.
+                        </div>
+                    </div>
+
+                    <div class="access-arrow">↓</div>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         IDENTITY
+    ========================================= -->
+
+    <section class="section identity" id="about">
+        <div class="section-inner">
+
+            <div class="identity-layout">
+
+                <div class="identity-copy reveal">
+
+                    <div class="eyebrow">The Challengers Standard</div>
+
+                    <h2 class="section-heading">
+                        More Than<br>
+                        A Game.
+                    </h2>
+
+                    <p>
+                        Challengers is built around player development,
+                        discipline and competition. Every player enters
+                        with a different starting point. The goal is to
+                        help each one develop the skills, confidence and
+                        habits required to take the next step.
+                    </p>
+
+                    <div class="identity-rule"></div>
+
+                </div>
+
+                <div class="image-stack reveal">
+
+                    <div class="image-main">
+                        <img src="p4.jpg" alt="Challengers basketball training">
+                    </div>
+
+                    <div class="image-secondary">
+                        <img src="p6.jpg" alt="Challengers training session">
+                    </div>
+
+                    <div class="image-tag">
+                        Train. Compete. Improve.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         TRAINING GALLERY
+    ========================================= -->
+
+    <section class="section training" id="training">
+
+        <div class="section-inner">
+
+            <div class="training-header reveal">
+
+                <div>
+                    <div class="eyebrow">Inside Challengers</div>
+                    <h2 class="section-heading">
+                        The Work<br>
+                        Shows.
+                    </h2>
+                </div>
+
+                <p class="training-note">
+                    Development happens on the court. Training,
+                    camps and competition create the environment
+                    where Challengers grow.
+                </p>
+
+            </div>
+
+            <div class="gallery">
+
+                <div class="gallery-item tall reveal">
+                    <img src="p7.jpg" alt="Challengers basketball camp">
+                    <div class="gallery-label">Development</div>
+                </div>
+
+                <div class="gallery-item reveal">
+                    <img src="p8.jpg" alt="Challengers basketball players">
+                    <div class="gallery-label">Together</div>
+                </div>
+
+                <div class="gallery-item reveal">
+                    <img src="p9.jpg" alt="Challengers basketball camp">
+                    <div class="gallery-label">Competition</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         PROGRAMS
+    ========================================= -->
+
+    <section class="section programs" id="programs">
+
+        <div class="section-inner">
+
+            <div class="program-header reveal">
+
+                <div>
+                    <div class="eyebrow">Development Pathway</div>
+                    <h2 class="section-heading">
+                        Choose Your<br>
+                        Level.
+                    </h2>
+                </div>
+
+                <p class="program-description">
+                    Select the program that best matches the player's
+                    current stage of development. The registration
+                    form will collect the information needed for review.
+                </p>
+
+            </div>
+
+            <div class="program-list reveal">
+
+                <a href="register.html?program=Foundation" class="program">
+                    <div class="program-no">01</div>
+                    <div class="program-name">Foundation</div>
+                    <div class="program-arrow">→</div>
+                </a>
+
+                <a href="register.html?program=Development" class="program">
+                    <div class="program-no">02</div>
+                    <div class="program-name">Development</div>
+                    <div class="program-arrow">→</div>
+                </a>
+
+                <a href="register.html?program=Competition" class="program">
+                    <div class="program-no">03</div>
+                    <div class="program-name">Competition</div>
+                    <div class="program-arrow">→</div>
+                </a>
+
+                <a href="register.html?program=Performance" class="program">
+                    <div class="program-no">04</div>
+                    <div class="program-name">Performance</div>
+                    <div class="program-arrow">→</div>
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         CTA
+    ========================================= -->
+
+    <section class="cta">
+
+        <div class="cta-inner reveal">
+
+            <div class="cta-small">Ready to start?</div>
+
+            <h2 class="cta-title">
+                Put Your<br>
+                Name In.
+            </h2>
+
+            <div class="cta-bottom">
+
+                <p class="cta-copy">
+                    Start a new player registration. The application
+                    takes only a few minutes and collects everything
+                    needed for the next step.
+                </p>
+
+                <a href="register.html" class="primary-btn">
+                    Start Registration
+                    <span class="arrow">→</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div class="footer-top">
+
+            <a href="index.html" class="footer-brand">
+                <img src="logo.png" alt="Challengers">
+                <div>
+                    <strong>CHALLENGERS</strong>
+                    <span>BASKETBALL ACADEMY</span>
+                </div>
+            </a>
+
+            <div class="footer-links">
+                <a href="register.html">Register</a>
+                <a href="#programs">Programs</a>
+                <a href="#training">Training</a>
+                <a href="#about">About</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span>Challengers Basketball Academy</span>
+            <span>Player Registration System</span>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script>
+
+    /* =========================================
+       LOADER
+    ========================================= */
+
+    window.addEventListener("load", () => {
+        setTimeout(() => {
+            document.getElementById("loader").classList.add("hide");
+        }, 450);
+    });
+
+
+    /* =========================================
+       NAVIGATION SCROLL EFFECT
+    ========================================= */
+
+    const nav = document.getElementById("nav");
+
+    function updateNav() {
+        if (window.scrollY > 40) {
+            nav.classList.add("scrolled");
+        } else {
+            nav.classList.remove("scrolled");
+        }
+    }
+
+    window.addEventListener("scroll", updateNav, { passive: true });
+    updateNav();
+
+
+    /* =========================================
+       MOBILE MENU
+    ========================================= */
+
+    const mobileToggle = document.getElementById("mobileToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    mobileToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("open");
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            navLinks.classList.remove("open");
+        });
+    });
+
+
+    /* =========================================
+       SCROLL REVEAL
+    ========================================= */
+
+    const revealElements = document.querySelectorAll(".reveal");
+
+    const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: "0px 0px -50px 0px"
+        }
+    );
+
+    revealElements.forEach(element => {
+        revealObserver.observe(element);
+    });
+
+
+    /* =========================================
+       SUBTLE HERO PARALLAX
+    ========================================= */
+
+    const heroImage = document.querySelector(".hero-image img");
+
+    window.addEventListener("scroll", () => {
+
+        if (!heroImage) return;
+
+        const scroll = window.scrollY;
+
+        if (scroll < window.innerHeight) {
+            heroImage.style.transform =
+                `scale(1.02) translateY(${scroll * 0.08}px)`;
+        }
+
+    }, { passive: true });
+
+
+    /* =========================================
+       PROGRAM LINK SUPPORT
+    ========================================= */
+
+    const params = new URLSearchParams(window.location.search);
+    const selectedProgram = params.get("program");
+
+    if (selectedProgram) {
+        console.log("Selected program:", selectedProgram);
+    }
+
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+    <title>Register Player | Challengers</title>
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --red: #d20a2e;
+        --red-bright: #ef173d;
+        --black: #070707;
+        --black-2: #0d0d0d;
+        --black-3: #151515;
+        --white: #fff;
+        --off-white: #f4f4f1;
+        --muted: #888;
+        --line: rgba(255,255,255,.11);
+        --dark-line: rgba(0,0,0,.12);
+        --ease: cubic-bezier(.22,1,.36,1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        background: var(--black);
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-height: 100vh;
+        background: var(--black);
+        color: var(--white);
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    /* =========================================
+       TOP BAR
+    ========================================= */
+
+    .topbar {
+        height: 78px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        padding: 0 5vw;
+        position: relative;
+        z-index: 10;
+        background: rgba(7,7,7,.96);
+    }
+
+    .topbar-inner {
+        width: 100%;
+        max-width: 1320px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .brand img {
+        width: 43px;
+        height: 43px;
+        object-fit: contain;
+    }
+
+    .brand-name {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 22px;
+        line-height: .9;
+        font-weight: 800;
+        letter-spacing: .06em;
+    }
+
+    .brand-label {
+        display: block;
+        color: #666;
+        font-size: 8px;
+        letter-spacing: .2em;
+        margin-top: 5px;
+    }
+
+    .back-link {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #888;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        transition: color .25s ease;
+    }
+
+    .back-link:hover {
+        color: white;
+    }
+
+    .back-arrow {
+        font-size: 17px;
+    }
+
+    /* =========================================
+       PAGE INTRO
+    ========================================= */
+
+    .page {
+        min-height: calc(100vh - 78px);
+        padding: 65px 5vw 90px;
+    }
+
+    .page-inner {
+        width: 100%;
+        max-width: 1050px;
+        margin: auto;
+    }
+
+    .intro {
+        margin-bottom: 48px;
+    }
+
+    .eyebrow {
+        color: var(--red);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+
+    .title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(58px, 8vw, 100px);
+        line-height: .82;
+        font-weight: 900;
+        letter-spacing: -.025em;
+        text-transform: uppercase;
+    }
+
+    .title span {
+        color: var(--red);
+    }
+
+    .intro-copy {
+        max-width: 570px;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.75;
+        margin-top: 23px;
+    }
+
+    /* =========================================
+       PROGRESS
+    ========================================= */
+
+    .progress-wrap {
+        margin-bottom: 35px;
+    }
+
+    .progress {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .progress-step {
+        min-height: 72px;
+        padding: 0 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        border-right: 1px solid var(--line);
+        color: #555;
+        transition: color .35s ease, background .35s ease;
+    }
+
+    .progress-step:last-child {
+        border-right: 0;
+    }
+
+    .progress-step.active {
+        color: white;
+        background: #0d0d0d;
+    }
+
+    .progress-step.completed {
+        color: #aaa;
+    }
+
+    .progress-step.active::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        height: 2px;
+        width: 100%;
+        background: var(--red);
+    }
+
+    .progress-number {
+        width: 26px;
+        height: 26px;
+        border: 1px solid #444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 13px;
+        transition: .35s ease;
+    }
+
+    .active .progress-number {
+        border-color: var(--red);
+        background: var(--red);
+        color: white;
+    }
+
+    .completed .progress-number {
+        border-color: #555;
+    }
+
+    .progress-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    /* =========================================
+       FORM CARD
+    ========================================= */
+
+    .form-shell {
+        background: var(--off-white);
+        color: var(--black);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-top {
+        min-height: 66px;
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--dark-line);
+    }
+
+    .form-section-name {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .form-required {
+        color: #777;
+        font-size: 9px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+
+    /* =========================================
+       FORM STEPS
+    ========================================= */
+
+    .form-step {
+        display: none;
+        padding: 38px 32px 35px;
+    }
+
+    .form-step.active {
+        display: block;
+        animation: stepIn .55s var(--ease);
+    }
+
+    @keyframes stepIn {
+        from {
+            opacity: 0;
+            transform: translateX(25px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .step-heading {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 42px;
+        line-height: .9;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .step-description {
+        color: #777;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 32px;
+    }
+
+    .fields {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 23px 20px;
+    }
+
+    .field.full {
+        grid-column: 1 / -1;
+    }
+
+    .field label {
+        display: block;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        margin-bottom: 9px;
+    }
+
+    .field label span {
+        color: var(--red);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+        width: 100%;
+        height: 52px;
+        padding: 0 14px;
+        border: 1px solid #d3d3cf;
+        background: white;
+        color: #111;
+        outline: none;
+        border-radius: 0;
+        font-size: 13px;
+        transition:
+            border-color .25s ease,
+            box-shadow .25s ease;
+    }
+
+    .field textarea {
+        height: 105px;
+        padding-top: 14px;
+        resize: vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+        color: #aaa;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px rgba(210,10,46,.08);
+    }
+
+    .field input.invalid,
+    .field select.invalid,
+    .field textarea.invalid {
+        border-color: var(--red);
+    }
+
+    .field-error {
+        display: none;
+        color: var(--red);
+        font-size: 10px;
+        margin-top: 7px;
+    }
+
+    .field-error.show {
+        display: block;
+    }
+
+    /* =========================================
+       HEIGHT
+    ========================================= */
+
+    .height-box {
+        position: relative;
+    }
+
+    .height-conversion {
+        min-height: 52px;
+        margin-top: 9px;
+        padding: 0 14px;
+        background: #e9e9e5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #777;
+        font-size: 11px;
+    }
+
+    .height-conversion strong {
+        color: #111;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 20px;
+    }
+
+    /* =========================================
+       PROGRAM SELECTION
+    ========================================= */
+
+    .program-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 4px;
+    }
+
+    .program-option {
+        position: relative;
+    }
+
+    .program-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .program-label {
+        min-height: 125px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid #d1d1cd;
+        background: white;
+        cursor: pointer;
+        transition:
+            border-color .3s ease,
+            background .3s ease,
+            transform .3s var(--ease);
+    }
+
+    .program-label:hover {
+        transform: translateY(-2px);
+        border-color: #aaa;
+    }
+
+    .program-option input:checked + .program-label {
+        border-color: var(--red);
+        background: #fff4f6;
+    }
+
+    .program-option input:checked + .program-label::after {
+        content: "SELECTED";
+        position: absolute;
+        right: 13px;
+        top: 13px;
+        color: var(--red);
+        font-size: 7px;
+        font-weight: 800;
+        letter-spacing: .12em;
+    }
+
+    .program-number {
+        color: #aaa;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 13px;
+    }
+
+    .program-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 27px;
+        line-height: 1;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .program-detail {
+        color: #888;
+        font-size: 9px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    /* =========================================
+       REVIEW
+    ========================================= */
+
+    .review {
+        border-top: 1px solid #d3d3cf;
+    }
+
+    .review-group {
+        padding: 21px 0;
+        border-bottom: 1px solid #d3d3cf;
+    }
+
+    .review-group-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .review-group-title {
+        color: #777;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+    }
+
+    .edit-btn {
+        border: 0;
+        background: none;
+        color: var(--red);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+    }
+
+    .review-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .review-item small {
+        display: block;
+        color: #999;
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        margin-bottom: 5px;
+    }
+
+    .review-item strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    /* =========================================
+       TERMS
+    ========================================= */
+
+    .terms {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        margin-top: 25px;
+        padding: 17px;
+        background: #e9e9e5;
+    }
+
+    .terms input {
+        margin-top: 2px;
+        accent-color: var(--red);
+    }
+
+    .terms label {
+        color: #666;
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    /* =========================================
+       FORM FOOTER
+    ========================================= */
+
+    .form-footer {
+        min-height: 82px;
+        padding: 0 32px;
+        border-top: 1px solid var(--dark-line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .step-count {
+        color: #999;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn {
+        min-height: 48px;
+        padding: 0 24px;
+        border: 0;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        transition:
+            transform .3s var(--ease),
+            background .3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-back {
+        background: transparent;
+        color: #555;
+    }
+
+    .btn-next,
+    .btn-submit {
+        background: var(--red);
+        color: white;
+    }
+
+    .btn-next:hover,
+    .btn-submit:hover {
+        background: var(--red-bright);
+    }
+
+    /* =========================================
+       SUCCESS
+    ========================================= */
+
+    .success {
+        display: none;
+        min-height: 480px;
+        padding: 65px 35px;
+        background: var(--black);
+        color: white;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .success.active {
+        display: flex;
+        animation: successIn .65s var(--ease);
+    }
+
+    @keyframes successIn {
+        from {
+            opacity: 0;
+            transform: scale(.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .success-mark {
+        width: 62px;
+        height: 62px;
+        border: 1px solid var(--red);
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        margin-bottom: 25px;
+    }
+
+    .success-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(52px, 8vw, 82px);
+        line-height: .85;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .success-copy {
+        max-width: 480px;
+        color: #888;
+        font-size: 12px;
+        line-height: 1.7;
+        margin: 20px auto 25px;
+    }
+
+    .application-id {
+        display: inline-block;
+        padding: 13px 18px;
+        border: 1px solid var(--line);
+        color: white;
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 22px;
+        letter-spacing: .08em;
+    }
+
+    .success-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+        .topbar {
+            height: 68px;
+        }
+
+        .brand-label {
+            display: none;
+        }
+
+        .brand img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+        }
+
+        .page {
+            padding: 48px 4vw 60px;
+        }
+
+        .intro {
+            margin-bottom: 35px;
+        }
+
+        .title {
+            font-size: clamp(57px, 18vw, 90px);
+        }
+
+        .progress-step {
+            min-height: 58px;
+            padding: 0 8px;
+            justify-content: center;
+        }
+
+        .progress-number {
+            width: 23px;
+            height: 23px;
+        }
+
+        .progress-label {
+            display: none;
+        }
+
+        .form-top {
+            padding: 0 20px;
+        }
+
+        .form-step {
+            padding: 30px 20px;
+        }
+
+        .fields {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .field.full {
+            grid-column: auto;
+        }
+
+        .program-options {
+            grid-template-columns: 1fr;
+        }
+
+        .review-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .form-footer {
+            padding: 15px 20px;
+            min-height: 75px;
+        }
+
+        .step-count {
+            display: none;
+        }
+
+        .form-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            flex: 1;
+        }
+
+        .success {
+            min-height: 440px;
+            padding: 50px 20px;
+        }
+
+        .success-actions {
+            width: 100%;
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 420px) {
+
+        .back-link {
+            font-size: 8px;
+        }
+
+        .back-link .back-arrow {
+            font-size: 14px;
+        }
+
+        .step-heading {
+            font-size: 36px;
+        }
+
+        .review-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-footer {
+            padding: 13px 15px;
+        }
+
+        .btn {
+            padding: 0 13px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: .01ms !important;
+            transition-duration: .01ms !important;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================
+     TOP BAR
+========================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <a href="index.html" class="brand">
+            <img src="logo.png" alt="Challengers">
+            <div>
+                <div class="brand-name">CHALLENGERS</div>
+                <span class="brand-label">BASKETBALL ACADEMY</span>
+            </div>
+        </a>
+
+        <a href="index.html" class="back-link">
+            <span class="back-arrow">←</span>
+            Back to Hub
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="page">
+
+    <div class="page-inner">
+
+        <!-- =========================================
+             INTRO
+        ========================================= -->
+
+        <section class="intro">
+
+            <div class="eyebrow">Player Intake / 2026</div>
+
+            <h1 class="title">
+                Register<br>
+                <span>A Player.</span>
+            </h1>
+
+            <p class="intro-copy">
+                Complete the application below with accurate player and
+                guardian information. Your registration will be prepared
+                for review by the Challengers team.
+            </p>
+
+        </section>
+
+
+        <!-- =========================================
+             PROGRESS
+        ========================================= -->
+
+        <div class="progress-wrap">
+
+            <div class="progress">
+
+                <div class="progress-step active" data-step="1">
+                    <div class="progress-number">01</div>
+                    <div class="progress-label">Player</div>
+                </div>
+
+                <div class="progress-step" data-step="2">
+                    <div class="progress-number">02</div>
+                    <div class="progress-label">Guardian</div>
+                </div>
+
+                <div class="progress-step" data-step="3">
+                    <div class="progress-number">03</div>
+                    <div class="progress-label">Program</div>
+                </div>
+
+                <div class="progress-step" data-step="4">
+                    <div class="progress-number">04</div>
+                    <div class="progress-label">Review</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             FORM SHELL
+        ========================================= -->
+
+        <div class="form-shell">
+
+            <form id="registrationForm" novalidate>
+
+                <!-- =====================================
+                     STEP 1 — PLAYER
+                ====================================== -->
+
+                <section class="form-step active" data-step="1">
+
+                    <h2 class="step-heading">Player Information</h2>
+
+                    <p class="step-description">
+                        Tell us about the player joining Challengers.
+                    </p>
+
+                    <div class="fields">
+
+                        <div class="field full">
+                            <label for="playerName">
+                                Full Name <span>*</span>
+                            </label>
+                            <input
+                                id="playerName"
+                                type="text"
+                                placeholder="Enter player's full name"
+                                autocomplete="name"
+                            >
+                            <div class="field-error" id="playerNameError">
+                                Please enter the player's full name.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="dateOfBirth">
+                                Date of Birth <span>*</span>
+                            </label>
+                            <input
+                                id="dateOfBirth"
+                                type="date"
+                            >
+                            <div class="field-error" id="dateOfBirthError">
+                                Please enter a valid date of birth.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="gender">
+                                Gender <span>*</span>
+                            </label>
+                            <select id="gender">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="field-error" id="genderError">
+                                Please select a gender.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="height">
+                                Height — cm <span>*</span>
+                            </label>
+
+                            <div class="height-box">
+                                <input
+                                    id="height"
+                                    type="number"
+                                    min="100"
+                                    max="250"
+                                    placeholder="e.g. 180"
+                                >
+
+                                <div class="height-conversion" id="heightConversion">
+                                    <span>Automatic conversion</span>
+                                    <strong>—</strong>
+                                </div>
+                            </div>
+
+                            <div class="field-error" id="heightError">
+                                Enter a height between 100 and 250 cm.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="position">
+                                Position <span>*</span>
+                            </label>
+                            <select id="position">
+                                <option value="">Select position</option>
+                                <option value="Point Guard">Point Guard</option>
+                                <option value="Shooting Guard">Shooting Guard</option>
+                                <option value="Small Forward">Small Forward</option>
+                                <option value="Power Forward">Power Forward</option>
+                                <option value="Center">Center</option>
+                                <option value="Guard / Forward">Guard / Forward</option>
+                            </select>
+                            <div class="field-error" id="positionError">
+                                Please select a position.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="school">
+                                School <span>*</span>
+                            </label>
+                            <input
+                                id="school"
+                                type="text"
+                                placeholder="Current school"
+                            >
+                            <div class="field-error" id="schoolError">
+                                Please enter the player's school.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="currentTeam">
+                                Current Team / Academy
+                            </label>
+                            <input
+                                id="currentTeam"
+                                type="text"
+                                placeholder="Optional"
+                            >
+                        </div>
+
+                        <div class="field full">
+                            <label for="experience">
+                                Basketball Experience <span>*</span>
+                            </label>
+
+                            <textarea
+                                id="experience"
+                                placeholder="Tell us briefly about the player's basketball experience..."
+                            ></textarea>
+
+                            <div class="field-error" id="experienceError">
+                                Please provide some basketball experience.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     STEP 2 — GUARDIAN
+                ====================================== -->
+
+                <section class="form-step" data-step="2">
+
+                    <h2 class="step-heading">Guardian Details</h2>
+
+                    <p class="step-description">
+                        Provide the contact information for the player's
+                        parent or legal guardian.
+                    </p>
+
+                    <div class="fields">
+
+                        <div class="field full">
+                            <label for="guardianName">
+                                Guardian Full Name <span>*</span>
+                            </label>
+
+                            <input
+                                id="guardianName"
+                                type="text"
+                                placeholder="Parent or guardian's full name"
+                            >
+
+                            <div class="field-error" id="guardianNameError">
+                                Please enter the guardian's name.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="guardianPhone">
+                                Phone Number <span>*</span>
+                            </label>
+
+                            <input
+                                id="guardianPhone"
+                                type="tel"
+                                placeholder="+251 9XX XXX XXX"
+                            >
+
+                            <div class="field-error" id="guardianPhoneError">
+                                Please enter a valid phone number.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="guardianEmail">
+                                Email Address
+                            </label>
+
+                            <input
+                                id="guardianEmail"
+                                type="email"
+                                placeholder="guardian@email.com"
+                            >
+                        </div>
+
+                        <div class="field full">
+                            <label for="emergencyContact">
+                                Emergency Contact <span>*</span>
+                            </label>
+
+                            <input
+                                id="emergencyContact"
+                                type="text"
+                                placeholder="Name + phone number"
+                            >
+
+                            <div class="field-error" id="emergencyContactError">
+                                Please provide an emergency contact.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     STEP 3 — PROGRAM
+                ====================================== -->
+
+                <section class="form-step" data-step="3">
+
+                    <h2 class="step-heading">Choose Program</h2>
+
+                    <p class="step-description">
+                        Select the program that best matches the player's
+                        current development stage.
+                    </p>
+
+                    <div class="program-options">
+
+                        <div class="program-option">
+                            <input
+                                type="radio"
+                                name="program"
+                                id="programFoundation"
+                                value="Foundation"
+                            >
+                            <label class="program-label" for="programFoundation">
+                                <span class="program-number">01</span>
+                                <span class="program-title">Foundation</span>
+                                <span class="program-detail">Fundamentals & Skills</span>
+                            </label>
+                        </div>
+
+                        <div class="program-option">
+                            <input
+                                type="radio"
+                                name="program"
+                                id="programDevelopment"
+                                value="Development"
+                            >
+                            <label class="program-label" for="programDevelopment">
+                                <span class="program-number">02</span>
+                                <span class="program-title">Development</span>
+                                <span class="program-detail">Skill Development</span>
+                            </label>
+                        </div>
+
+                        <div class="program-option">
+                            <input
+                                type="radio"
+                                name="program"
+                                id="programCompetition"
+                                value="Competition"
+                            >
+                            <label class="program-label" for="programCompetition">
+                                <span class="program-number">03</span>
+                                <span class="program-title">Competition</span>
+                                <span class="program-detail">Team & Game Play</span>
+                            </label>
+                        </div>
+
+                        <div class="program-option">
+                            <input
+                                type="radio"
+                                name="program"
+                                id="programPerformance"
+                                value="Performance"
+                            >
+                            <label class="program-label" for="programPerformance">
+                                <span class="program-number">04</span>
+                                <span class="program-title">Performance</span>
+                                <span class="program-detail">Advanced Development</span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="fields" style="margin-top:25px;">
+
+                        <div class="field">
+                            <label for="trainingLocation">
+                                Training Location <span>*</span>
+                            </label>
+
+                            <select id="trainingLocation">
+                                <option value="">Select location</option>
+                                <option value="Main Court">Main Court</option>
+                                <option value="Training Court">Training Court</option>
+                                <option value="Other">Other</option>
+                            </select>
+
+                            <div class="field-error" id="trainingLocationError">
+                                Please select a training location.
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="schedule">
+                                Preferred Schedule <span>*</span>
+                            </label>
+
+                            <select id="schedule">
+                                <option value="">Select schedule</option>
+                                <option value="Weekday Afternoon">Weekday Afternoon</option>
+                                <option value="Weekday Evening">Weekday Evening</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Flexible">Flexible</option>
+                            </select>
+
+                            <div class="field-error" id="scheduleError">
+                                Please select a preferred schedule.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="field-error" id="programError" style="margin-top:20px;">
+                        Please select a program.
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     STEP 4 — REVIEW
+                ====================================== -->
+
+                <section class="form-step" data-step="4">
+
+                    <h2 class="step-heading">Review Application</h2>
+
+                    <p class="step-description">
+                        Check the information below before submitting
+                        the player's application.
+                    </p>
+
+                    <div class="review">
+
+                        <div class="review-group">
+
+                            <div class="review-group-header">
+                                <span class="review-group-title">Player</span>
+                                <button type="button" class="edit-btn" data-edit="1">
+                                    Edit
+                                </button>
+                            </div>
+
+                            <div class="review-grid">
+
+                                <div class="review-item">
+                                    <small>Name</small>
+                                    <strong id="reviewPlayerName">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Date of Birth</small>
+                                    <strong id="reviewDateOfBirth">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Gender</small>
+                                    <strong id="reviewGender">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Height</small>
+                                    <strong id="reviewHeight">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Position</small>
+                                    <strong id="reviewPosition">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>School</small>
+                                    <strong id="reviewSchool">—</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="review-group">
+
+                            <div class="review-group-header">
+                                <span class="review-group-title">Guardian</span>
+                                <button type="button" class="edit-btn" data-edit="2">
+                                    Edit
+                                </button>
+                            </div>
+
+                            <div class="review-grid">
+
+                                <div class="review-item">
+                                    <small>Name</small>
+                                    <strong id="reviewGuardianName">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Phone</small>
+                                    <strong id="reviewGuardianPhone">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Email</small>
+                                    <strong id="reviewGuardianEmail">—</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="review-group">
+
+                            <div class="review-group-header">
+                                <span class="review-group-title">Program</span>
+                                <button type="button" class="edit-btn" data-edit="3">
+                                    Edit
+                                </button>
+                            </div>
+
+                            <div class="review-grid">
+
+                                <div class="review-item">
+                                    <small>Program</small>
+                                    <strong id="reviewProgram">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Program Code</small>
+                                    <strong id="reviewProgramNumber">—</strong>
+                                </div>
+
+                                <div class="review-item">
+                                    <small>Schedule</small>
+                                    <strong id="reviewSchedule">—</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="terms">
+
+                        <input type="checkbox" id="terms">
+
+                        <label for="terms">
+                            I confirm that the information provided is
+                            accurate and that I am authorized to submit
+                            this application on behalf of the player.
+                        </label>
+
+                    </div>
+
+                    <div class="field-error" id="termsError">
+                        Please confirm the information before submitting.
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     FORM FOOTER
+                ====================================== -->
+
+                <div class="form-footer" id="formFooter">
+
+                    <div class="step-count">
+                        Step <span id="stepNumber">01</span> / 04
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-back"
+                            id="backButton"
+                            style="display:none;"
+                        >
+                            Back
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-next"
+                            id="nextButton"
+                        >
+                            Continue
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-submit"
+                            id="submitButton"
+                            style="display:none;"
+                        >
+                            Submit Application
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- =========================================
+                 SUCCESS
+            ========================================= -->
+
+            <section class="success" id="registrationSuccess">
+
+                <div class="success-mark">✓</div>
+
+                <h2 class="success-title">
+                    Application<br>
+                    Received.
+                </h2>
+
+                <p class="success-copy">
+                    The player registration has been successfully
+                    prepared. Keep the application ID for reference.
+                </p>
+
+                <div class="application-id" id="applicationId">
+                    CHA-0000
+                </div>
+
+                <div class="success-actions">
+
+                    <a href="index.html" class="btn btn-back">
+                        Return to Hub
+                    </a>
+
+                    <button
+                        type="button"
+                        class="btn btn-submit"
+                        id="newRegistration"
+                    >
+                        New Registration
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================= -->
+
+<script>
+
+    const form = document.getElementById("registrationForm");
+
+    const steps = document.querySelectorAll(".form-step");
+    const progressSteps = document.querySelectorAll(".progress-step");
+
+    const nextButton = document.getElementById("nextButton");
+    const backButton = document.getElementById("backButton");
+    const submitButton = document.getElementById("submitButton");
+
+    const stepNumber = document.getElementById("stepNumber");
+
+    const formFooter = document.getElementById("formFooter");
+    const successScreen = document.getElementById("registrationSuccess");
+
+    let currentStep = 1;
+
+
+    /* =========================================
+       AGE
+    ========================================= */
+
+    function calculateAge(dateString) {
+
+        if (!dateString) return "";
+
+        const birthDate = new Date(dateString + "T00:00:00");
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+
+        const monthDifference =
+            today.getMonth() - birthDate.getMonth();
+
+        if (
+            monthDifference < 0 ||
+            (
+                monthDifference === 0 &&
+                today.getDate() < birthDate.getDate()
+            )
+        ) {
+            age--;
+        }
+
+        return age;
+    }
+
+
+    /* =========================================
+       HEIGHT CONVERSION
+    ========================================= */
+
+    const heightInput = document.getElementById("height");
+    const heightConversion =
+        document.getElementById("heightConversion");
+
+    let heightFeet = "";
+    let heightInches = "";
+
+    heightInput.addEventListener("input", () => {
+
+        const cm = Number(heightInput.value);
+
+        if (!cm || cm < 100 || cm > 250) {
+
+            heightFeet = "";
+            heightInches = "";
+
+            heightConversion.innerHTML = `
+                <span>Automatic conversion</span>
+                <strong>—</strong>
+            `;
+
+            return;
+        }
+
+        const totalInches = cm / 2.54;
+
+        heightFeet = Math.floor(totalInches / 12);
+        heightInches = Math.round(totalInches % 12);
+
+        if (heightInches === 12) {
+            heightFeet++;
+            heightInches = 0;
+        }
+
+        heightConversion.innerHTML = `
+            <span>Imperial height</span>
+            <strong>${heightFeet}'${heightInches}"</strong>
+        `;
+    });
+
+
+    /* =========================================
+       FIELD HELPERS
+    ========================================= */
+
+    function value(id) {
+        return document.getElementById(id).value.trim();
+    }
+
+
+    function showError(id) {
+
+        const error = document.getElementById(id + "Error");
+
+        if (error) {
+            error.classList.add("show");
+        }
+
+        const input = document.getElementById(id);
+
+        if (input) {
+            input.classList.add("invalid");
+        }
+    }
+
+
+    function clearError(id) {
+
+        const error = document.getElementById(id + "Error");
+
+        if (error) {
+            error.classList.remove("show");
+        }
+
+        const input = document.getElementById(id);
+
+        if (input) {
+            input.classList.remove("invalid");
+        }
+    }
+
+
+    function validateStep(step) {
+
+        let valid = true;
+
+
+        /* PLAYER */
+
+        if (step === 1) {
+
+            const fields = [
+                "playerName",
+                "dateOfBirth",
+                "gender",
+                "height",
+                "position",
+                "school",
+                "experience"
+            ];
+
+            fields.forEach(clearError);
+
+            if (!value("playerName")) {
+                showError("playerName");
+                valid = false;
+            }
+
+            if (!value("dateOfBirth")) {
+                showError("dateOfBirth");
+                valid = false;
+            }
+
+            if (!value("gender")) {
+                showError("gender");
+                valid = false;
+            }
+
+            const cm = Number(value("height"));
+
+            if (!cm || cm < 100 || cm > 250) {
+                showError("height");
+                valid = false;
+            }
+
+            if (!value("position")) {
+                showError("position");
+                valid = false;
+            }
+
+            if (!value("school")) {
+                showError("school");
+                valid = false;
+            }
+
+            if (!value("experience")) {
+                showError("experience");
+                valid = false;
+            }
+        }
+
+
+        /* GUARDIAN */
+
+        if (step === 2) {
+
+            [
+                "guardianName",
+                "guardianPhone",
+                "emergencyContact"
+            ].forEach(clearError);
+
+            if (!value("guardianName")) {
+                showError("guardianName");
+                valid = false;
+            }
+
+            const phone = value("guardianPhone");
+
+            if (
+                !phone ||
+                phone.replace(/\D/g, "").length < 9
+            ) {
+                showError("guardianPhone");
+                valid = false;
+            }
+
+            if (!value("emergencyContact")) {
+                showError("emergencyContact");
+                valid = false;
+            }
+        }
+
+
+        /* PROGRAM */
+
+        if (step === 3) {
+
+            const selectedProgram =
+                document.querySelector(
+                    'input[name="program"]:checked'
+                );
+
+            document.getElementById("programError")
+                .classList.remove("show");
+
+            clearError("trainingLocation");
+            clearError("schedule");
+
+            if (!selectedProgram) {
+                document.getElementById("programError")
+                    .classList.add("show");
+
+                valid = false;
+            }
+
+            if (!value("trainingLocation")) {
+                showError("trainingLocation");
+                valid = false;
+            }
+
+            if (!value("schedule")) {
+                showError("schedule");
+                valid = false;
+            }
+        }
+
+
+        return valid;
+    }
+
+
+    /* =========================================
+       REVIEW DATA
+    ========================================= */
+
+    function updateReview() {
+
+        document.getElementById("reviewPlayerName").textContent =
+            value("playerName") || "—";
+
+        document.getElementById("reviewDateOfBirth").textContent =
+            value("dateOfBirth") || "—";
+
+        document.getElementById("reviewGender").textContent =
+            value("gender") || "—";
+
+        const cm = Number(value("height"));
+
+        if (cm && heightFeet !== "") {
+
+            document.getElementById("reviewHeight").textContent =
+                `${cm} cm (${heightFeet}'${heightInches}")`;
+
+        } else {
+
+            document.getElementById("reviewHeight").textContent =
+                "—";
+        }
+
+        document.getElementById("reviewPosition").textContent =
+            value("position") || "—";
+
+        document.getElementById("reviewSchool").textContent =
+            value("school") || "—";
+
+        document.getElementById("reviewGuardianName").textContent =
+            value("guardianName") || "—";
+
+        document.getElementById("reviewGuardianPhone").textContent =
+            value("guardianPhone") || "—";
+
+        document.getElementById("reviewGuardianEmail").textContent =
+            value("guardianEmail") || "Not provided";
+
+        const program =
+            document.querySelector(
+                'input[name="program"]:checked'
+            );
+
+        document.getElementById("reviewProgram").textContent =
+            program ? program.value : "—";
+
+        const programCodes = {
+            Foundation: "01",
+            Development: "02",
+            Competition: "03",
+            Performance: "04"
+        };
+
+        document.getElementById("reviewProgramNumber").textContent =
+            program
+                ? "CHA-" + programCodes[program.value]
+                : "—";
+
+        document.getElementById("reviewSchedule").textContent =
+            value("schedule") || "—";
+    }
+
+
+    /* =========================================
+       SHOW STEP
+    ========================================= */
+
+    function showStep(step) {
+
+        currentStep = step;
+
+        steps.forEach(section => {
+            section.classList.toggle(
+                "active",
+                Number(section.dataset.step) === step
+            );
+        });
+
+        progressSteps.forEach(item => {
+
+            const number = Number(item.dataset.step);
+
+            item.classList.toggle(
+                "active",
+                number === step
+            );
+
+            item.classList.toggle(
+                "completed",
+                number < step
+            );
+        });
+
+        stepNumber.textContent =
+            String(step).padStart(2, "0");
+
+        backButton.style.display =
+            step > 1 ? "block" : "none";
+
+        nextButton.style.display =
+            step < 4 ? "block" : "none";
+
+        submitButton.style.display =
+            step === 4 ? "block" : "none";
+
+        if (step === 4) {
+            updateReview();
+        }
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    /* =========================================
+       NEXT
+    ========================================= */
+
+    nextButton.addEventListener("click", () => {
+
+        if (!validateStep(currentStep)) {
+            return;
+        }
+
+        if (currentStep < 4) {
+            showStep(currentStep + 1);
+        }
+    });
+
+
+    /* =========================================
+       BACK
+    ========================================= */
+
+    backButton.addEventListener("click", () => {
+
+        if (currentStep > 1) {
+            showStep(currentStep - 1);
+        }
+    });
+
+
+    /* =========================================
+       EDIT BUTTONS
+    ========================================= */
+
+    document.querySelectorAll(".edit-btn")
+        .forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                const step =
+                    Number(button.dataset.edit);
+
+                showStep(step);
+            });
+
+        });
+
+
+    /* =========================================
+       FORM SUBMISSION
+    ========================================= */
+
+    form.addEventListener("submit", event => {
+
+        event.preventDefault();
+
+        const terms = document.getElementById("terms");
+        const termsError = document.getElementById("termsError");
+
+        if (!terms.checked) {
+
+            termsError.classList.add("show");
+
+            return;
+        }
+
+        termsError.classList.remove("show");
+
+
+        const program =
+            document.querySelector(
+                'input[name="program"]:checked'
+            );
+
+
+        /* Generate application ID */
+
+        const applicationId =
+            "CHA-" +
+            Math.floor(1000 + Math.random() * 9000);
+
+
+        /* Collect application */
+
+        const application = {
+
+            applicationId,
+
+            player: {
+                name: value("playerName"),
+                dateOfBirth: value("dateOfBirth"),
+                age: calculateAge(value("dateOfBirth")),
+                gender: value("gender"),
+                heightCm: Number(value("height")),
+                heightFeet: heightFeet,
+                heightInches: heightInches,
+                position: value("position"),
+                school: value("school"),
+                currentTeam: value("currentTeam"),
+                experience: value("experience")
+            },
+
+            guardian: {
+                name: value("guardianName"),
+                phone: value("guardianPhone"),
+                email: value("guardianEmail"),
+                emergencyContact: value("emergencyContact")
+            },
+
+            program: {
+                name: program ? program.value : "",
+                trainingLocation: value("trainingLocation"),
+                schedule: value("schedule")
+            },
+
+            submittedAt: new Date().toISOString(),
+
+            status: "pending"
+        };
+
+
+        /* Save locally for now */
+
+        localStorage.setItem(
+            "challengers_last_application",
+            JSON.stringify(application)
+        );
+
+
+        /* Update success screen */
+
+        document.getElementById("applicationId")
+            .textContent = applicationId;
+
+
+        form.style.display = "none";
+        formFooter.style.display = "none";
+
+        successScreen.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+
+        /*
+            FUTURE TELEGRAM CONNECTION:
+
+            When the Python backend is ready,
+            this is where the application will be
+            sent to the backend.
+
+            Example:
+
+            fetch("/api/applications", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(application)
+            });
+
+        */
+
+    });
+
+
+    /* =========================================
+       NEW REGISTRATION
+    ========================================= */
+
+    document.getElementById("newRegistration")
+        .addEventListener("click", () => {
+
+            form.reset();
+
+            heightFeet = "";
+            heightInches = "";
+
+            heightConversion.innerHTML = `
+                <span>Automatic conversion</span>
+                <strong>—</strong>
+            `;
+
+            document.querySelectorAll(".field-error")
+                .forEach(error => {
+                    error.classList.remove("show");
+                });
+
+            document.querySelectorAll(".invalid")
+                .forEach(field => {
+                    field.classList.remove("invalid");
+                });
+
+            successScreen.classList.remove("active");
+
+            form.style.display = "block";
+            formFooter.style.display = "flex";
+
+            showStep(1);
+        });
+
+
+    /* =========================================
+       PRESELECT PROGRAM FROM HOMEPAGE
+    ========================================= */
+
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const requestedProgram =
+        params.get("program");
+
+    if (requestedProgram) {
+
+        const matchingProgram =
+            document.querySelector(
+                `input[name="program"][value="${requestedProgram}"]`
+            );
+
+        if (matchingProgram) {
+            matchingProgram.checked = true;
+        }
+    }
+
+</script>
+```
+
+</body>
+</html>
